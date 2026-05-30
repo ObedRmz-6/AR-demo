@@ -1,0 +1,8 @@
+# Originales de Scaniverse (ya copiados a models/ con nombres limpios)
+Scaniverse*.glb
+Scaniverse*.usdz
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.swp

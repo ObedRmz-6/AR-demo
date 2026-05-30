@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1120" />
+  <title>Abrir en AR · Modelo Scaniverse</title>
+  <meta name="description" content="Abre el modelo 3D en Realidad Aumentada con un solo toque." />
+
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: #0b1120;
+      color: #f8fafc;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background:
+        radial-gradient(900px 600px at 50% 20%, rgba(56,189,248,0.18), transparent 60%),
+        radial-gradient(700px 500px at 50% 90%, rgba(129,140,248,0.16), transparent 60%),
+        #0b1120;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      position: relative;
+    }
+
+    /* model-viewer oculto pero presente para usar su activateAR() */
+    model-viewer {
+      position: absolute;
+      width: 1px; height: 1px;
+      opacity: 0;
+      pointer-events: none;
+      top: 0; left: 0;
+    }
+
+    .logo {
+      width: 56px; height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      display: grid; place-items: center;
+      box-shadow: 0 14px 36px rgba(56,189,248,0.45);
+      margin-bottom: 22px;
+    }
+    .logo svg { width: 30px; height: 30px; color: #0b1120; }
+
+    h1 {
+      font-size: 30px;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      margin: 0 0 12px;
+      font-weight: 800;
+      max-width: 520px;
+    }
+
+    p.sub {
+      margin: 0 0 36px;
+      color: #cbd5e1;
+      max-width: 460px;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .ar-mega-button {
+      position: relative;
+      width: min(90vw, 360px);
+      padding: 22px 28px;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      color: #0b1120;
+      border: none;
+      border-radius: 999px;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 19px;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      box-shadow: 0 22px 48px rgba(56,189,248,0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      animation: pulse 2.2s ease-in-out infinite;
+    }
+
+    .ar-mega-button:hover { transform: translateY(-2px); box-shadow: 0 26px 56px rgba(56,189,248,0.55); }
+    .ar-mega-button:active { transform: translateY(0); animation: none; }
+    .ar-mega-button svg { width: 24px; height: 24px; }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 22px 48px rgba(56,189,248,0.45), 0 0 0 0 rgba(56,189,248,0.4); }
+      50%      { box-shadow: 0 22px 48px rgba(56,189,248,0.45), 0 0 0 18px rgba(56,189,248,0); }
+    }
+
+    .hint {
+      margin-top: 22px;
+      color: #94a3b8;
+      font-size: 13.5px;
+      max-width: 360px;
+      line-height: 1.5;
+    }
+
+    .back-link {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 13.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.2);
+      background: rgba(15,23,42,0.55);
+      backdrop-filter: blur(6px);
+    }
+    .back-link:hover { color: #f8fafc; border-color: rgba(148,163,184,0.4); }
+    .back-link svg { width: 14px; height: 14px; }
+
+    .desktop-warning {
+      display: none;
+      margin-top: 30px;
+      padding: 16px 20px;
+      border-radius: 14px;
+      background: rgba(251,191,36,0.08);
+      border: 1px solid rgba(251,191,36,0.3);
+      color: #fde68a;
+      max-width: 440px;
+      font-size: 14px;
+    }
+
+    .device-tag {
+      margin-top: 28px;
+      font-size: 12px;
+      color: #64748b;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>
+    </svg>
+    Volver al visor
+  </a>
+
+  <model-viewer
+    id="viewer"
+    src="models/modelo.glb"
+    ios-src="models/modelo.usdz"
+    alt="Modelo 3D Scaniverse"
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    ar-scale="fixed"
+    ar-placement="floor"
+    loading="eager">
+  </model-viewer>
+
+  <div class="logo" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L3 7v10l9 5 9-5V7l-9-5z"/>
+      <path d="M3 7l9 5 9-5"/>
+      <path d="M12 12v10"/>
+    </svg>
+  </div>
+
+  <h1>Listo para verlo en tu espacio</h1>
+  <p class="sub">Toca el botón para abrir el modelo 3D en Realidad Aumentada a tamaño real.</p>
+
+  <button class="ar-mega-button" id="ar-btn" aria-label="Abrir en Realidad Aumentada">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L3 7v10l9 5 9-5V7l-9-5z"/>
+      <path d="M3 7l9 5 9-5"/>
+      <path d="M12 12v10"/>
+    </svg>
+    Abrir en AR
+  </button>
+
+  <div class="hint" id="hint">Apunta la cámara al piso cuando se abra AR.</div>
+
+  <div class="desktop-warning" id="desktop-warning">
+    ⚠️ Parece que estás en una computadora. La Realidad Aumentada solo funciona en celulares (Android con Chrome o iPhone con Safari). Abre esta página desde tu móvil.
+  </div>
+
+  <div class="device-tag" id="device-tag"></div>
+
+  <script>
+    const viewer = document.getElementById('viewer');
+    const btn = document.getElementById('ar-btn');
+    const hint = document.getElementById('hint');
+    const warning = document.getElementById('desktop-warning');
+    const tag = document.getElementById('device-tag');
+
+    const ua = navigator.userAgent;
+    const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    const isAndroid = /Android/i.test(ua);
+    const isMobile = isIOS || isAndroid;
+
+    if (isIOS) tag.textContent = 'iOS · AR Quick Look';
+    else if (isAndroid) tag.textContent = 'Android · Scene Viewer';
+    else { tag.textContent = 'Escritorio'; warning.style.display = 'block'; }
+
+    // Cuando el modelo carga, intenta activar AR al primer toque
+    let modelReady = false;
+    viewer.addEventListener('load', () => { modelReady = true; });
+
+    btn.addEventListener('click', async () => {
+      if (!isMobile) {
+        warning.style.display = 'block';
+        return;
+      }
+
+      // Esperar a que el modelo esté listo (máx 5s)
+      if (!modelReady) {
+        hint.textContent = 'Cargando modelo…';
+        const start = Date.now();
+        while (!modelReady && Date.now() - start < 5000) {
+          await new Promise(r => setTimeout(r, 100));
+        }
+      }
+
+      if (viewer.canActivateAR) {
+        try {
+          await viewer.activateAR();
+          hint.textContent = 'Si AR no se abrió, toca el botón otra vez.';
+        } catch (err) {
+          console.error(err);
+          hint.textContent = 'No se pudo abrir AR en este dispositivo.';
+        }
+      } else {
+        hint.textContent = 'Este dispositivo no soporta AR. Prueba en Chrome (Android) o Safari (iOS).';
+      }
+    });
+  </script>
+</body>
+</html>
