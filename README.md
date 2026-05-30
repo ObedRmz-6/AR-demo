@@ -1,6 +1,6 @@
-# Visor WebAR · Modelo 3D Scaniverse
+# Visor WebAR · Modelo 3D
 
-Página web para visualizar un modelo 3D capturado con **Scaniverse** en **Realidad Aumentada** a tamaño real, directamente desde el navegador del celular. Construida con [Google Model Viewer](https://modelviewer.dev/) y lista para desplegar en GitHub Pages.
+Página web para visualizar un modelo 3D en **Realidad Aumentada** a tamaño real, directamente desde el navegador del celular. Construida con [Google Model Viewer](https://modelviewer.dev/) y lista para desplegar en GitHub Pages.
 
 ## Estructura
 
@@ -46,5 +46,4 @@ Para probar AR desde el celular en local necesitas HTTPS (usa `ngrok http 8000` 
 
 ## Créditos
 
-- Captura 3D: [Scaniverse](https://scaniverse.com/)
 - Visor: [Google Model Viewer](https://modelviewer.dev/)
